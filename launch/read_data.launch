@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+
+  <node name="challenge3" pkg="challenge3" type="challenge3_node" output="screen">
+      <param name="rosbag_file_name" value="$(find challenge3)/data/test.bag" />
+  </node>
+
+
+</launch>
