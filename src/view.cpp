@@ -6,15 +6,9 @@
 #include <sensor_msgs/Image.h>
 
 #include <cv_bridge/cv_bridge.h>
-
-// Include OpenCV
 #include <sensor_msgs/image_encodings.h>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
-#include "opencv2/core/core.hpp"
-#include "opencv2/features2d/features2d.hpp"
-#include "opencv2/nonfree/features2d.hpp"
-#include "opencv2/nonfree/nonfree.hpp"
 
 
 #include <boost/foreach.hpp>
@@ -50,23 +44,16 @@ int main(int argc, char** argv) {
   topics.push_back(std::string("/center_camera/image_color"));
 
   rosbag::View view(bag, rosbag::TopicQuery(topics));
-  std::vector <sensor_msgs::NavSatFix::ConstPtr> gps_vector;
-  std::vector <std::vector<cv::KeyPoint> > keypoints_vector;
-  unsigned int count = 0;
-  bool gps_info_bool = 0;
 
   foreach(rosbag::MessageInstance const m, view)
   {
 
     sensor_msgs::NavSatFix::ConstPtr gps_msg = m.instantiate<sensor_msgs::NavSatFix>();
     if (gps_msg != NULL)
-    {
       std::cout << "GPS   - Timestamp " << gps_msg->header.stamp.toNSec() << " - Longitude: " << gps_msg->longitude << " Latitude:" <<  gps_msg->latitude << std::endl;
-      gps_vector.push_back(gps_msg);
-      gps_info_bool = 1;
-    }
+
     sensor_msgs::Image::ConstPtr img_msg= m.instantiate<sensor_msgs::Image>();
-    if (img_msg != NULL && gps_info_bool)
+    if (img_msg != NULL)
     {
       std::cout << "Image - Timestamp " << img_msg->header.stamp.toNSec() << " - width: " << img_msg->width <<  std::endl;
 
@@ -80,27 +67,10 @@ int main(int argc, char** argv) {
         ROS_ERROR("cv_bridge exception: %s", e.what());
         return 0;
       }
-
-      // Detect the keypoints using SURF Detector
-       int minHessian = 400;
-
-       cv::SurfFeatureDetector detector( minHessian );
-       std::vector<cv::KeyPoint> keypoints_1;
-       detector.detect( cv_ptr->image, keypoints_1 );
-       keypoints_vector.push_back(keypoints_1);
-
-       //-- Draw keypoints
-       cv::Mat img_keypoints_1;
-       cv::drawKeypoints( cv_ptr->image, keypoints_1, img_keypoints_1, cv::Scalar::all(-1), cv::DrawMatchesFlags::DEFAULT );
-
       // Update GUI Window
-      cv::imshow(OPENCV_WINDOW, img_keypoints_1);
-      cv::waitKey(0);
-      gps_info_bool = 0;
+      cv::imshow(OPENCV_WINDOW, cv_ptr->image);
+      cv::waitKey(100);
     }
-    count++;
-    std::cout << "Skip image " << count << std::endl;
-
   }
 
   bag.close();
