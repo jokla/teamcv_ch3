@@ -11,10 +11,19 @@
 #include <sensor_msgs/image_encodings.h>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
-#include "opencv2/core/core.hpp"
-#include "opencv2/features2d/features2d.hpp"
-#include "opencv2/nonfree/features2d.hpp"
-#include "opencv2/nonfree/nonfree.hpp"
+#include <opencv2/core/core.hpp>
+#include <opencv2/features2d/features2d.hpp>
+#if (CV_MAJOR_VERSION >= 3)
+#define USE_OPENCV_3
+#endif
+
+#ifdef USE_OPENCV_3
+#  include <opencv2/xfeatures2d.hpp>
+#else
+#  include <opencv2/nonfree/features2d.hpp>
+#  include <opencv2/nonfree/nonfree.hpp>
+#endif
+
 
 
 #include <boost/foreach.hpp>
@@ -81,13 +90,18 @@ int main(int argc, char** argv) {
         return 0;
       }
 
+      std::vector<cv::KeyPoint> keypoints_1;
+#ifdef USE_OPENCV_3
+      cv::Ptr<cv::Feature2D> detector = cv::xfeatures2d::SURF::create();
+      detector->detect( cv_ptr->image, keypoints_1 );
+#else
       // Detect the keypoints using SURF Detector
        int minHessian = 400;
 
        cv::SurfFeatureDetector detector( minHessian );
-       std::vector<cv::KeyPoint> keypoints_1;
        detector.detect( cv_ptr->image, keypoints_1 );
        keypoints_vector.push_back(keypoints_1);
+#endif
 
        //-- Draw keypoints
        cv::Mat img_keypoints_1;
