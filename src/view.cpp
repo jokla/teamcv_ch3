@@ -16,13 +16,16 @@
 
 static const std::string OPENCV_WINDOW = "Image window";
 
+std::string DATA_LOCATION_PREFIX = DATA_DIR;
+
+
 int main(int argc, char** argv) {
 
   ros::init(argc, argv, "challenge3");
 
   ros::NodeHandle n(std::string("~"));
   std::string rosbagFileName;
-  n.param<std::string>("rosbag_file_name", rosbagFileName, "test.bag");
+  n.param<std::string>("rosbag_file_name", rosbagFileName, DATA_LOCATION_PREFIX + "test.bag");
 
   ros::start();
 
