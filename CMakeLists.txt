@@ -124,6 +124,11 @@ include_directories(
 )
 
 
+## Data path for each user
+# Define folder with data for tests
+add_definitions( -DDATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data/")
+
+
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
