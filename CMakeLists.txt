@@ -136,8 +136,8 @@ add_definitions( -DDATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data/")
 
 ## Declare a C++ executable
  add_executable(challenge3_node src/main.cpp)
-
  add_executable(viewer src/view.cpp)
+ add_executable(keypoints_matching src/keypoints_matching.cpp)
 
 
 ## Add cmake target dependencies of the executable
@@ -152,7 +152,8 @@ add_definitions( -DDATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data/")
  target_link_libraries(viewer
    ${catkin_LIBRARIES}
  )
-
-
-
+ target_link_libraries(keypoints_matching
+   ${catkin_LIBRARIES}
+   ${OpenCV_LIBRARIES}
+ )
 
