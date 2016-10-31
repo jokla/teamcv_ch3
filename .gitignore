@@ -38,3 +38,5 @@
 CMakeCache.txt
 .DS_Store
 CMakeLists.txt.user*
+
+data/
