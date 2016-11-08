@@ -213,5 +213,5 @@ with rosbag.Bag(rosbag_file_imgs, "r") as bag:
             else:
                 print ("Skipped frame " + str(center_gps_interp[count][0]))
             	#try_write_image(center_vel_zero_images_dir, msg)
-            count = count + 1
+        count = count + 1
 save_gps_csv(center_gps_interp_filtered, "gps_vel_data_center_interp_filtered.csv")
